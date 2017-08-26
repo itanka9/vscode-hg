@@ -468,6 +468,11 @@ export class Model implements Disposable {
 		});
 	}
 
+	async blame(path: string, line: number): Promise<void> {
+		const blameInfo = await this.repository.blame(path, line);
+		console.log(blameInfo);
+	}
+
 	// resource --> repo-relative path	
 	public mapResourceToRepoRelativePath(resource: Resource): string {
 		const relativePath = this.mapFileUriToRepoRelativePath(resource.resourceUri);

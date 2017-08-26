@@ -957,6 +957,17 @@ export class CommandCenter {
 		}
 	}
 
+	@command('hg.blame')
+	private async blame() {
+		if (window.activeTextEditor) {
+			const result = await this.model.blame(
+				window.activeTextEditor.document.fileName,
+				window.activeTextEditor.selection.active.line
+			);
+			console.log(result);
+		}
+	}
+
 	private async diffFile(rev1: Revision, rev2: Revision, file: IFileStatus) {
 		const uri = this.model.toUri(file.path);
 		const left = uri.with({ scheme: 'hg', query: rev1.hash });

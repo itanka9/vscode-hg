@@ -414,7 +414,7 @@ export class Hg {
 		await this.exec(parentPath, ['clone', url, folderPath]);
 		return folderPath;
 	}
-
+	
 	async getRepositoryRoot(path: string): Promise<string> {
 		const result = await this.exec(path, ['root']);
 		return result.stdout.trim();
@@ -748,6 +748,17 @@ export class Repository {
 				err.hgErrorCode = HgErrorCodes.BranchAlreadyExists;
 			}
 
+			throw err;
+		}
+	}
+
+	async blame(path: string, line: number): Promise<string> {
+		const args = ['blame', path, '-u', '-c'];
+		try {
+			const result =  await this.run(args);
+			return result.stdout;
+		}
+		catch (err) {
 			throw err;
 		}
 	}
