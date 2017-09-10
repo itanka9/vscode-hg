@@ -6,13 +6,14 @@
 
 
 
-import { ExtensionContext, workspace, window, Disposable, commands, Uri, OutputChannel } from 'vscode';
+import { ExtensionContext, workspace, window, Disposable, commands, languages, Hover, Uri, OutputChannel } from 'vscode';
 import { HgFinder, Hg, IHg, HgFindAttemptLogger } from './hg';
 import { Model } from './model';
 import { MercurialSCMProvider } from './scmProvider';
 import { CommandCenter } from './commands';
 import { StatusBarCommands } from './statusbar';
 import { HgContentProvider } from './contentProvider';
+import { BlameAnnotationsProvider } from './blameProvider';
 import { AutoIncomingOutgoing } from './autoinout';
 import { MergeDecorator } from './merge';
 import * as nls from 'vscode-nls';
@@ -51,6 +52,7 @@ async function init(context: ExtensionContext, disposables: Disposable[]): Promi
 	const contentProvider = new HgContentProvider(model);
 	const autoInOut = new AutoIncomingOutgoing(model);
 	const mergeDecorator = new MergeDecorator(model);
+	const blameAnnotationsProvider = new BlameAnnotationsProvider(model);
 
 	disposables.push(
 		commandCenter,
@@ -58,6 +60,7 @@ async function init(context: ExtensionContext, disposables: Disposable[]): Promi
 		contentProvider,
 		autoInOut,
 		mergeDecorator,
+		blameAnnotationsProvider,
 		model
 	);
 

@@ -177,6 +177,51 @@ export class Resource implements SourceControlResourceState {
 	) { }
 }
 
+export interface BlameLineInfo {
+	line: number,
+	user: string,
+	commitHash: string
+}
+
+export class Blame {
+
+	private blameData: { [key: number]: BlameLineInfo };
+
+	constructor (rawBlame: string) {
+		this.blameData = this.parseRawBlame(rawBlame);
+	}
+
+	private parseRawBlame(rawBlame) {
+		const output = {}	
+ 
+		const blameLines = rawBlame
+			.split(/\n|\r/)
+			.map(line => {
+				const m = line.match(/^(.+?)(\w+):/);
+				if (m) {
+					return { user: m[1], commitHash: m[2] }
+				}
+			})
+			.filter(info => info !== undefined)
+			.forEach((info, index) => {
+				const line = index
+				output[line] = {
+					line,
+					...info
+				}
+			})
+		return output
+	}
+
+	public atLine (line: number): BlameLineInfo | undefined {
+		return this.blameData[line];
+	}
+
+	public allLines(): BlameLineInfo[] {
+		return Object.keys(this.blameData).map(k => this.blameData[k])
+	}
+}
+
 export enum Operation {
 	Status = 1 << 0,
 	Add = 1 << 1,
@@ -468,9 +513,8 @@ export class Model implements Disposable {
 		});
 	}
 
-	async blame(path: string, line: number): Promise<void> {
-		const blameInfo = await this.repository.blame(path, line);
-		console.log(blameInfo);
+	async blame(path: string): Promise<Blame> {
+		return new Blame(await this.repository.blame(path));
 	}
 
 	// resource --> repo-relative path	

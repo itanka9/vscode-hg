@@ -752,10 +752,10 @@ export class Repository {
 		}
 	}
 
-	async blame(path: string, line: number): Promise<string> {
-		const args = ['blame', path, '-u', '-c'];
+	async blame(path: string): Promise<string> {
+		const args = ['annotate', path, '-u', '-c', '-v'];
 		try {
-			const result =  await this.run(args);
+			const result = await this.run(args);
 			return result.stdout;
 		}
 		catch (err) {
