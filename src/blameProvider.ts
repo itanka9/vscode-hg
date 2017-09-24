@@ -40,9 +40,19 @@ export class BlameAnnotationsProvider extends Disposable {
         
         subscriptions.push(window.onDidChangeTextEditorSelection(this._onTextEditorSelectionChanged, this));
 
-        subscriptions.push(window.onDidChangeActiveTextEditor(this._onActiveTextEditorChanged, this))
+        subscriptions.push(window.onDidChangeActiveTextEditor(this._onActiveTextEditorChanged, this));
 
+        subscriptions.push(workspace.onDidOpenTextDocument(this._onDocumentChanged, this));
+        
         this._disposable = Disposable.from(...subscriptions);
+
+        
+    }
+
+    private async _onDocumentChanged(e: TextDocument) {
+        for (const editor of window.visibleTextEditors) {
+            this._onActiveTextEditorChanged(editor);
+        }
     }
 
     private async _onActiveTextEditorChanged(e: TextEditor) {

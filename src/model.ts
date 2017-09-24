@@ -249,6 +249,7 @@ export enum Operation {
 	AddRemove = 1 << 22,
 	SetBookmark = 1 << 23,
 	RemoveBookmark = 1 << 24,
+	Annotate = 1 << 25,
 }
 
 function isReadOnly(operation: Operation): boolean {
@@ -513,8 +514,11 @@ export class Model implements Disposable {
 		});
 	}
 
+	@throttle
 	async blame(path: string): Promise<Blame> {
-		return new Blame(await this.repository.blame(path));
+		return await this.run(Operation.Annotate, async () => {
+			return new Blame(await this.repository.blame(path));
+		})
 	}
 
 	// resource --> repo-relative path	

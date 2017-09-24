@@ -306,11 +306,6 @@
         "command": "hg.update",
         "title": "%command.update%",
         "category": "Hg"
-      },
-      {
-        "command": "hg.blame",
-        "title": "%command.blame%",
-        "category": "Hg"
       }
     ],
     "menus": {
@@ -449,10 +444,6 @@
         },
         {
           "command": "hg.logRepo",
-          "when": "config.hg.enabled && scmProvider == hg && hgState == idle"
-        },
-        {
-          "command": "hg.blame",
           "when": "config.hg.enabled && scmProvider == hg && hgState == idle"
         }
       ],

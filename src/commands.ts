@@ -961,8 +961,7 @@ export class CommandCenter {
 	private async blame() {
 		if (window.activeTextEditor) {
 			const result = await this.model.blame(
-				window.activeTextEditor.document.fileName,
-				window.activeTextEditor.selection.active.line
+				window.activeTextEditor.document.fileName
 			);
 			console.log(result);
 		}
